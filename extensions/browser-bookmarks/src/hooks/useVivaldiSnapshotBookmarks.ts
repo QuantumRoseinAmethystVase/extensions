@@ -10,6 +10,6 @@ export default function useVivaldiBookmarks(enabled: boolean) {
     path: VIVALDI_BOOKMARKS_PATH,
     browserName: "Vivaldi Snapshot",
     browserIcon: "vivaldisnapshot.png",
-    browserBundleId: BROWSERS_BUNDLE_ID.Vivaldi.snapshot,
+    browserBundleId: BROWSERS_BUNDLE_ID.vivaldiSnapshot,
   });
 }
