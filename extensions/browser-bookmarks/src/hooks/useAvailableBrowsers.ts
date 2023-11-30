@@ -14,6 +14,7 @@ export const BROWSERS_BUNDLE_ID = {
   edgeDev: "com.microsoft.edgemac.dev",
   edgeCanary: "com.microsoft.edgemac.canary",
   vivaldi: "com.vivaldi.vivaldi",
+  vivaldisnapshot: "com.vivaldi.Vivaldi.snapshot",
 };
 
 export const availableBrowsers = Object.values(BROWSERS_BUNDLE_ID);
