@@ -27,6 +27,7 @@ import useEdgeDevBookmarks from "./hooks/useEdgeDevBookmarks";
 import useFirefoxBookmarks from "./hooks/useFirefoxBookmarks";
 import useSafariBookmarks from "./hooks/useSafariBookmarks";
 import useVivaldiBookmarks from "./hooks/useVivaldiBrowser";
+import useVivaldiSnapshotBookmarks from "./hooks/useVivaldiSnapshotBookmarks";
 import { getMacOSDefaultBrowser } from "./utils/browsers";
 // Note: frecency is intentionally misspelled: https://wiki.mozilla.org/User:Jesse/NewFrecency.
 import { BookmarkFrecency, getBookmarkFrecency } from "./utils/frecency";
@@ -108,7 +109,7 @@ export default function Command() {
   const hasFirefoxDev = browsers.includes(BROWSERS_BUNDLE_ID.firefoxDev) ?? false;
   const hasSafari = browsers.includes(BROWSERS_BUNDLE_ID.safari) ?? false;
   const hasVivaldi = browsers.includes(BROWSERS_BUNDLE_ID.vivaldi) ?? false;
-
+  const hasVivaldiSnapshot = browsers.includes(BROWSERS_BUNDLE_ID.vivaldiSnapshot) ?? false;
   const arc = useArcBookmarks(hasArc);
   const brave = useBraveBookmarks(hasBrave);
   const braveBeta = useBraveBetaBookmarks(hasBraveBeta);
@@ -120,6 +121,7 @@ export default function Command() {
   const firefox = useFirefoxBookmarks(hasFirefox || hasFirefoxDev);
   const safari = useSafariBookmarks(hasSafari);
   const vivaldi = useVivaldiBookmarks(hasVivaldi);
+  const vivaldiSnapshot = useVivaldiBookmarks(hasVivaldiSnapshot);
 
   const [bookmarks, setBookmarks] = useCachedState<Bookmark[]>("bookmarks", []);
   const [folders, setFolders] = useCachedState<Folder[]>("folders", []);
@@ -137,6 +139,7 @@ export default function Command() {
       ...firefox.bookmarks,
       ...safari.bookmarks,
       ...vivaldi.bookmarks,
+      ...vivaldiSnapshot.bookmarks,
     ]
       .map((item) => {
         let domain;
@@ -182,6 +185,7 @@ export default function Command() {
     firefox.bookmarks,
     safari.bookmarks,
     vivaldi.bookmarks,
+    vivaldiSnapshot.bookmarks,
     frecencies,
     setBookmarks,
   ]);
@@ -199,6 +203,7 @@ export default function Command() {
       ...firefox.folders,
       ...safari.folders,
       ...vivaldi.folders,
+      ...vivaldiSnapshot.folders,
     ];
 
     setFolders(folders);
@@ -214,6 +219,7 @@ export default function Command() {
     firefox.folders,
     safari.folders,
     vivaldi.folders,
+    vivaldiSnapshot.folders,
     setFolders,
   ]);
 
@@ -322,6 +328,9 @@ export default function Command() {
     if (hasVivaldi) {
       vivaldi.mutate();
     }
+    if (hasVivaldiSnapshot) {
+      vivaldiSnapshot.mutate();
+    }
   }
 
   async function updateFrecency(item: { id: string; title: string; url: string; folder: string }) {
@@ -373,7 +382,8 @@ export default function Command() {
         edgeDev.isLoading ||
         firefox.isLoading ||
         safari.isLoading ||
-        vivaldi.isLoading
+        vivaldi.isLoading ||
+        vivaldiSnapshot.isLoading
       }
       searchBarPlaceholder="Search by title, domain name, or folder name"
       onSearchTextChange={setQuery}
@@ -524,6 +534,15 @@ export default function Command() {
                     profiles={vivaldi.profiles}
                     currentProfile={vivaldi.currentProfile}
                     setCurrentProfile={vivaldi.setCurrentProfile}
+                  />
+                  <SelectProfileSubmenu
+                    bundleId={BROWSERS_BUNDLE_ID.vivaldiSnapshot}
+                    name="Vivaldi Snapshot"
+                    icon="vivaldiSnapshot.png"
+                    shortcut={{ modifiers: ["cmd", "shift"], key: "v" }}
+                    profiles={vivaldiSnapshot.profiles}
+                    currentProfile={vivaldiSnapshot.currentProfile}
+                    setCurrentProfile={vivaldiSnapshot.setCurrentProfile}
                   />
                 </ActionPanel.Section>
 
